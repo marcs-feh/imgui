@@ -35,6 +35,12 @@ draw_text :: proc(rd: Renderer, msg: string, pos: ivec2, font: Font, size: int, 
 	rd.procedure(rd.data, .Draw_Text, Rect{ pos = pos}, msg, font, size, color)
 }
 
+draw_box :: proc(rd: Renderer, rect: Rect, border: int, color: Color, border_color: Color){
+	inner := rect_resize(rect, -abs(border))
+	draw_rect(rd, rect, border_color)
+	draw_rect(rd, inner, color)
+}
+
 set_clip :: proc(rd: Renderer, w, h: int){
 	rd.procedure(rd.data, .Set_Clip, Rect{ w = w, h = h }, "", nil, 0, {})
 }
@@ -42,3 +48,4 @@ set_clip :: proc(rd: Renderer, w, h: int){
 reset_clip :: proc(rd: Renderer){
 	rd.procedure(rd.data, .Reset_Clip, {}, "", nil, 0, {})
 }
+

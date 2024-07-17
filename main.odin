@@ -17,20 +17,37 @@ main :: proc(){
 	mem.arena_init(&temp_arena, temp_arena_buf[:])
 	context.temp_allocator = mem.arena_allocator(&temp_arena)
 
-	rd := raylib_renderer()
-	font := load_font(FONT, 16)
-	defer unload_font(font)
+	ui := ui_make()
+	ui.renderer = raylib_renderer()
+
+	ui.font = load_font(FONT, 16)
+	defer unload_font(ui.font)
 
 	for !rl.WindowShouldClose(){
 		defer free_all(context.temp_allocator)
+
+		build_ui: {
+			ui_begin(&ui)
+			defer ui_end(&ui)
+
+			window_begin(&ui, "Hiii")
+		}
 
 		render: {
 			rl.BeginDrawing()
 			defer rl.EndDrawing()
 			rl.ClearBackground(auto_cast rgb(45, 20, 45))
 
-			draw_rect(rd, Rect{{30, 30}, 300, 200}, rgb(120, 80, 40))
-			draw_text(rd, "Poggers", {40, 40}, font, 16, rgb(200, 200, 200))
+			ui_render(&ui)
+
+			draw_text(ui.renderer, fmt.tprintf(
+					"FPS: %v | Resolution %vx%v | Mouse (%d, %d) | Objects W:%v L:%v C:%v",
+					rl.GetFPS(),
+					rl.GetScreenWidth(), rl.GetScreenHeight(),
+					rl.GetMouseX(),
+					rl.GetMouseY(),
+					len(ui.windows), len(ui.layouts), len(ui.controls),
+				), {8, 8}, ui.font, 16, rgb(50, 210, 50))
 		}
 	}
 }
