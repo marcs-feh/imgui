@@ -44,3 +44,16 @@ raylib_font :: proc(f: Font) -> ^rl.Font {
 
 @private
 scissor_mode := false
+
+load_font :: proc(data: []byte, size: int, allocator := context.allocator) -> Font {
+	font := new(rl.Font, allocator)
+	rlfont := rl.LoadFontFromMemory(".TTF", raw_data(data), i32(len(data)), i32(size), nil, 0)
+	font^ = rlfont
+	return transmute(Font)font
+}
+
+unload_font :: proc(font: Font, allocator := context.allocator){
+	rl.UnloadFont(raylib_font(font)^)
+	free(font, allocator)
+}
+

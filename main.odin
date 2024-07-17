@@ -4,6 +4,8 @@ import "core:mem"
 import "core:fmt"
 import rl "vendor:raylib"
 
+FONT :: #load("assets/inconsolata.ttf", []byte)
+
 main :: proc(){
 	rl.InitWindow(1000, 650, "demo")
 	rl.SetWindowState({.WINDOW_TOPMOST})
@@ -16,6 +18,8 @@ main :: proc(){
 	context.temp_allocator = mem.arena_allocator(&temp_arena)
 
 	rd := raylib_renderer()
+	font := load_font(FONT, 16)
+	defer unload_font(font)
 
 	for !rl.WindowShouldClose(){
 		defer free_all(context.temp_allocator)
@@ -23,9 +27,10 @@ main :: proc(){
 		render: {
 			rl.BeginDrawing()
 			defer rl.EndDrawing()
-			rl.ClearBackground({50, 50, 110, 255})
+			rl.ClearBackground(auto_cast rgb(45, 20, 45))
 
-			draw_rect(rd, Rect{{30, 30}, 300, 200}, auto_cast rl.BLACK)
+			draw_rect(rd, Rect{{30, 30}, 300, 200}, rgb(120, 80, 40))
+			draw_text(rd, "Poggers", {40, 40}, font, 16, rgb(200, 200, 200))
 		}
 	}
 }
