@@ -5,18 +5,15 @@ import "core:hash"
 Id :: distinct i32
 
 Window :: struct {
-	id: Id,
 	body: Rect,
 	layouts: []Layout,
 }
 
 Control :: struct {
-	id: Id,
 	bounds: Rect,
 }
 
 Layout :: struct {
-	id: Id,
 	controls: []Control,
 }
 
@@ -35,7 +32,6 @@ UIContext :: struct {
 		mouse: MouseInput,
 		keyboard: KeyboardInput,
 	},
-
 
 	renderer: Renderer,
 	_internal_flags: bit_set[enum {
